@@ -2,4 +2,4 @@ I am Deepak.
 
 It's develop.
 
-It's feature A.
+Feature A : Fixed A.
