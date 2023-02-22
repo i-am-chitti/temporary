@@ -7,3 +7,5 @@ It's my first commit.
 It's my second commit.
 
 It's my thrid commit.
+
+It's my fourth commit.
