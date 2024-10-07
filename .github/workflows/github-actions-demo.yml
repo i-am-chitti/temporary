@@ -1,6 +1,13 @@
 name: GitHub Actions Demo
 run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
-on: workflow_dispatch
+on: 
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to push to'
+        required: true
+        default: 'qa'
+
 jobs:
   Explore-GitHub-Actions:
     runs-on: ubuntu-latest
@@ -16,3 +23,13 @@ jobs:
         run: |
           ls ${{ github.workspace }}
       - run: echo "🍏 This job's status is ${{ job.status }}."
+      - run: |
+          if [ "${{ github.event.inputs.environment }}" = "qa" ]; then
+            echo "🚦 Pushing to QA environment..."
+          elif [ "${{ github.event.inputs.environment }}" = "production" ]; then
+            echo "🚀 Pushing to production environment..."
+          else
+            echo "❓ Environment not recognized. Please provide a valid environment."
+            exit 1
+          fi
+      - run: echo "🏁 The job has been completed successfully!"
