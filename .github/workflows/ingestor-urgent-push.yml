@@ -1,5 +1,4 @@
-name: GitHub Actions Demo
-run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
+name: Ingestor Urgent Push
 on: 
   workflow_dispatch:
     inputs:

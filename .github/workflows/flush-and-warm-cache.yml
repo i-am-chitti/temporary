@@ -1,5 +1,4 @@
 name: Flush and Warm Cache
-run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
 on: 
   workflow_dispatch:
     inputs:
@@ -9,7 +8,7 @@ on:
         default: 'qa'
 
 jobs:
-  Flush-Warm-Cache:
+  Explore-GitHub-Actions:
     runs-on: ubuntu-latest
     steps:
       - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
