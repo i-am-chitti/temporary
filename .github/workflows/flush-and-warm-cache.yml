@@ -6,6 +6,10 @@ on:
         description: 'Environment to push to'
         required: true
         default: 'qa'
+      flush_object_cache:
+        description: 'Flush object cache'
+        required: false
+        default: 'false'
 
 jobs:
   Explore-GitHub-Actions:
@@ -31,4 +35,5 @@ jobs:
             echo "❓ Environment not recognized. Please provide a valid environment."
             exit 1
           fi
+          bash .bin/flush-and-warm-cache.sh ${{ inputs.environment }} ${{ inputs.flush_object_cache }}
       - run: echo "🏁 The job has been completed successfully!"
