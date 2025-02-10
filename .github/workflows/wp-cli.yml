@@ -51,6 +51,10 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Validate args
+        env:
+            environment: ${{ inputs.environment }}
+            command: ${{ inputs.command }}
+            additional_params: ${{ inputs.additional_params }}
         run: |
           if [ -z "${{ inputs.environment }}" ]; then
             echo "::error::Environment is required"
@@ -60,14 +64,14 @@ jobs:
             echo "::error::Command is required"
             exit 1
           fi
-          if [ -n "${{ inputs.additional_params }}" ]; then
+          if [ -n "$additional_params" ]; then
               safe_regex='^[a-zA-Z0-9/_=.-]+$'
-              if [[ ! "${{ inputs.additional_params }}" =~ $safe_regex ]]; then
+              if [[ ! "$additional_params" =~ $safe_regex ]]; then
                 echo "::error::Invalid additional parameters"
                 exit 1
               fi
               blocked_words='(rm|eval|exec|system|passthru|shell_exec|php_exec|python_exec|wget|curl|>|<|`|\$\(.*\))'
-              if [[ "${{ inputs.additional_params }}" =~ $blocked_words ]]; then
+              if [[ "$additional_params" =~ $blocked_words ]]; then
                 echo "::error::Blocked words found in additional parameters"
                 exit 1
               fi
