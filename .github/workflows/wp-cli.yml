@@ -70,3 +70,12 @@ jobs:
             echo "::error::Blocked words found in additional parameters"
             exit 1
           fi
+
+      - name: Echo args
+        run: |
+          echo "Environment: ${{ inputs.environment }}"
+          echo "Command: ${{ inputs.command }}"
+          echo "Additional params: ${{ inputs.additional_params }}"
+          echo "Running WP CLI command..."
+          echo "-----------------------------------"
+          echo "wp ${{ inputs.environment }}.example.com ${{ inputs.command }} ${{ inputs.additional_params }}"
