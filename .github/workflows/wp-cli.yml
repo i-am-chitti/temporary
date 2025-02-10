@@ -1,0 +1,72 @@
+name: WP CLI
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Choose an environment to run the WP CLI command on"
+        default: "qa"
+        type: choice
+        options:
+          - "qa"
+          - "staging"
+          - "live"
+      command:
+        description: "Choose the WP CLI command to run"
+        default: "cache_get"
+        type: choice
+        options:
+          - "cache_get"
+          - "cache_delete"
+          - "cache_flush"
+          - "cache_flush_group"
+          - "cache_edge_warmup"
+          - "cron_event_list"
+          - "cron_event_run"
+          - "softrip_sync_all"
+          - "softrip_sync_items"
+          - "ingestor_push_all"
+          - "ingestor_push_items"
+          - "ingestor_push_urgent"
+          - "solr_index"
+          - "solr_info"
+          - "solr_stats"
+          - "meta_get"
+          - "meta_list"
+      additional_params:
+        description: "Enter additional parameters (e.g., xyz --group='group1' --expiration=34)"
+        default: ""
+        type: string
+        required: false
+
+permissions:
+  contents: read
+
+jobs:
+  pre-run:
+    name: Pre-Run
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate args
+        run: |
+          if [ -z "${{ inputs.environment }}" ]; then
+            echo "::error::Environment is required"
+            exit 1
+          fi
+          if [ -z "${{ inputs.command }}" ]; then
+            echo "::error::Command is required"
+            exit 1
+          fi
+          local safe_regex='^[a-zA-Z0-9/_=.-]+$'
+          if [[ ! "${{ inputs.additional_params }}" =~ $safe_regex ]]; then
+            echo "::error::Invalid additional parameters"
+            exit 1
+          fi
+          local blocked_words='(rm|eval|exec|system|passthru|shell_exec|php_exec|python_exec|wget|curl|>|<|`|\$\(.*\))'
+          if [[ "${{ inputs.additional_params }}" =~ $blocked_words ]]; then
+            echo "::error::Blocked words found in additional parameters"
+            exit 1
+          fi
