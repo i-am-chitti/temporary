@@ -60,15 +60,17 @@ jobs:
             echo "::error::Command is required"
             exit 1
           fi
-          safe_regex='^[a-zA-Z0-9/_=.-]+$'
-          if [[ ! "${{ inputs.additional_params }}" =~ $safe_regex ]]; then
-            echo "::error::Invalid additional parameters"
-            exit 1
-          fi
-          blocked_words='(rm|eval|exec|system|passthru|shell_exec|php_exec|python_exec|wget|curl|>|<|`|\$\(.*\))'
-          if [[ "${{ inputs.additional_params }}" =~ $blocked_words ]]; then
-            echo "::error::Blocked words found in additional parameters"
-            exit 1
+          if [ -n "${{ inputs.additional_params }}" ]; then
+              safe_regex='^[a-zA-Z0-9/_=.-]+$'
+              if [[ ! "${{ inputs.additional_params }}" =~ $safe_regex ]]; then
+                echo "::error::Invalid additional parameters"
+                exit 1
+              fi
+              blocked_words='(rm|eval|exec|system|passthru|shell_exec|php_exec|python_exec|wget|curl|>|<|`|\$\(.*\))'
+              if [[ "${{ inputs.additional_params }}" =~ $blocked_words ]]; then
+                echo "::error::Blocked words found in additional parameters"
+                exit 1
+              fi
           fi
 
       - name: Echo args
