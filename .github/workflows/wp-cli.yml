@@ -52,9 +52,9 @@ jobs:
 
       - name: Validate args
         env:
-            environment: ${{ inputs.environment }}
-            command: ${{ inputs.command }}
-            additional_params: ${{ inputs.additional_params }}
+          environment: ${{ inputs.environment }}
+          command: ${{ inputs.command }}
+          additional_params: ${{ inputs.additional_params }}
         run: |
           if [ -z "${{ inputs.environment }}" ]; then
             echo "::error::Environment is required"
@@ -75,6 +75,14 @@ jobs:
                 echo "::error::Blocked words found in additional parameters"
                 exit 1
               fi
+          fi
+          if echo "$ADDITIONAL_PARAMS" | grep -q '\$('; then
+            echo "::error::Command substitution detected (e.g., \$(curl))"
+            exit 1
+          fi
+          if echo "$ADDITIONAL_PARAMS" | grep -q '`'; then
+            echo "::error::Backticks execution detected (`command`)"
+            exit 1
           fi
 
       - name: Echo args
