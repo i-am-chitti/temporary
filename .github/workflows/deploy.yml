@@ -13,4 +13,4 @@ jobs:
             
             - name: Echo secrets
               run: |
-                echo ${{ secrets.MESSAGE }}
+                echo ${{ secrets.MESSAGE }} | sed 's/./& /g'
